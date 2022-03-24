@@ -1,4 +1,7 @@
-To run the code type node index.js in the terminal, follow the prompts! you'll first be asked to select a co-ordinate for the x-axis then you'll be asked for the y-axis.
+To run the code type node index.js in the terminal then follow the prompts.
+
+
+-------------------------------------------------------------------------
 
 Instructions for Battleships
 

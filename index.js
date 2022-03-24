@@ -1,48 +1,39 @@
-console.log("Battleships! Enter two coordintes an X & Y!");
+console.log(
+  "Battleships! Enter two numbers between 1-8 that represent the co-ordinates (X & Y) to find the hidden two boats"
+);
 
-// Battleships using text input and output
-// create 8x8 grid x & y
-// randomly assign 2 signle cell ships on board
-// allow user 20 guesses
-// 1-2 cells away from  'warm
-// 3-4 away - cold
-// if hit user gets hit and ship is remoed from board
-// game ends when both ships hit or 20 guesses
-
-const firstPosition = () => {
-  const randomShipPosition1 = Math.floor(Math.random() * 8);
-  const randomShipPosition2 = Math.floor(Math.random() * 8);
-  const combinedValues = [randomShipPosition1 + 1, randomShipPosition2 + 1];
+// generate the two random positions the battleships will be placed at
+const firstRandomBattleshipPosition = () => {
+  const randomShipPositionX = Math.floor(Math.random() * 8);
+  const randomShipPositionY = Math.floor(Math.random() * 8);
+  const combinedValues = [randomShipPositionX + 1, randomShipPositionY + 1];
   return combinedValues;
 };
 
-const secondPosition = () => {
-  const secondrandomShipPosition1 = Math.floor(Math.random() * 8);
-  const secondrandomShipPosition2 = Math.floor(Math.random() * 8);
+const secondRandomBattleShipPosition = () => {
+  const secondrandomShipPositionX = Math.floor(Math.random() * 8);
+  const secondrandomShipPositionY = Math.floor(Math.random() * 8);
   const combinedValues = [
-    secondrandomShipPosition1 + 1,
-    secondrandomShipPosition2 + 1,
+    secondrandomShipPositionX + 1,
+    secondrandomShipPositionY + 1,
   ];
   return combinedValues;
-  //geneartes second set of random positions to store second battleship
 };
 
-const firstRandomPosition = firstPosition();
-const secondRandomPosition = secondPosition();
-
-console.log("1 gen", firstRandomPosition);
-console.log("2 gen", secondRandomPosition);
+const firstRandomPosition = firstRandomBattleshipPosition();
+const secondRandomPosition = secondRandomBattleShipPosition();
 
 const generateBoard = () => {
+  // generates an 8x8 board - both ships are currently being displayed
   let arr = [];
   for (let x = 1; x < 9; x++) {
     for (let y = 1; y < 9; y++) {
-      const xandyaxis = [x, y];
+      const xandyCombined = [x, y];
       if (
-        JSON.stringify(firstRandomPosition) === JSON.stringify(xandyaxis) ||
-        JSON.stringify(secondRandomPosition) === JSON.stringify(xandyaxis)
+        JSON.stringify(firstRandomPosition) === JSON.stringify(xandyCombined) ||
+        JSON.stringify(secondRandomPosition) === JSON.stringify(xandyCombined)
       ) {
-        arr.push([0]);
+        arr.push("ship");
       } else {
         arr.push([x, y]);
       }
@@ -51,19 +42,12 @@ const generateBoard = () => {
   return arr;
 };
 
-const isClose = () => {};
+let questionCounter = 1;
+let hitCounter = 1;
 
-let questionCounter = 0;
-let firstHit = 0;
-let SecondHit = 0;
+const genBoard = generateBoard();
 
 const questions = () => {
-  console.log("question counter", questionCounter);
-
-  console.log("1", questionCounter);
-  console.log("2", firstHit);
-  console.log("3", SecondHit);
-
   const readline = require("readline");
   const rl = readline.createInterface({
     input: process.stdin,
@@ -72,33 +56,63 @@ const questions = () => {
 
   rl.question(
     "Enter your first number for the X Axis between 1-8 : ",
-    (answer1) => {
+    (userX) => {
       rl.question(
         "Enter your second number for the Y Axis between 1-8 : ",
-        (answer2) => {
+        (userY) => {
           rl.close();
-          let userCombinedInputs = [Number(answer1), Number(answer2)];
+          let userXVal = Number(userX);
+          let userYVal = Number(userY);
 
-          if (firstHit == 1) {
-            questionCounter++;
-            console.log("first ship has already been hit, try again!");
-            questions();
-          } else if (SecondHit == 1) {
-            console.log("second ship has already been hit, try again!");
-            questionCounter++;
-            questions();
-          } else if (questionCounter == 20) {
+          let userCombinedInputs = [userXVal, userYVal];
+          // saves users input values in an array then compare distances of each to determine if hot/warm/cold
+
+          const firstShipDistance =
+            Math.abs(userXVal - firstRandomPosition[0]) +
+            Math.abs(userYVal - firstRandomPosition[1]);
+
+          const secondShipDistance =
+            Math.abs(userXVal - secondRandomPosition[0]) +
+            Math.abs(userYVal - secondRandomPosition[1]);
+
+          const compareDistances = () => {
+            if (firstShipDistance > secondShipDistance) {
+              return secondShipDistance;
+            } else {
+              return firstShipDistance;
+            }
+          };
+
+          const smallestDisatnce = compareDistances();
+
+          const hotWarmCold = () => {
+            if (smallestDisatnce >= 5) {
+              return "Cold";
+            } else if (smallestDisatnce >= 3) {
+              return "Warm";
+            } else {
+              return "Hot";
+            }
+          };
+
+          const howHot = hotWarmCold();
+
+          if (questionCounter == 20) {
             console.log(
               "A maximum of 20 guesses has been exceeded! Play again!"
             );
             process.exit();
-          } else if (firstHit == 1 && SecondHit == 1) {
+          }
+          if (hitCounter == 2) {
             console.log("Congrats! You found both of the ships!");
-          } else if (
+            process.exit();
+          }
+          //compare user input to the first & second random boat positions
+          if (
             JSON.stringify(userCombinedInputs) ===
             JSON.stringify(firstRandomPosition)
           ) {
-            firstHit++;
+            hitCounter++;
             questionCounter++;
             console.log("Hit! Try find the second ship!");
             questions();
@@ -106,12 +120,12 @@ const questions = () => {
             JSON.stringify(userCombinedInputs) ===
             JSON.stringify(secondRandomPosition)
           ) {
-            SecondHit++;
+            hitCounter++;
             questionCounter++;
             console.log("Hit! Try find the other ship!");
             questions();
           } else {
-            console.log("Missed! try again!");
+            console.log(howHot);
             questionCounter++;
             questions();
           }
@@ -122,7 +136,7 @@ const questions = () => {
 };
 
 const startGame = () => {
-  console.log(generateBoard());
+  console.log("Game Board", genBoard);
   questions();
 };
 startGame();
