@@ -58,7 +58,7 @@ const questions = () => {
   rl.question(
     "Enter your first number for the X Axis between 1-8 : ",
     (userX) => {
-      if (userX == "q") {
+      if (userX === "q") {
         process.exit();
       }
       rl.question(
@@ -66,7 +66,7 @@ const questions = () => {
         (userY) => {
           rl.close();
 
-          if (userX || userY == "q") {
+          if (userY === "q") {
             process.exit();
           }
 
