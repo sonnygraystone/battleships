@@ -1,5 +1,5 @@
 console.log(
-  "Battleships! Enter two numbers between 1-8 that represent the co-ordinates (X & Y) to find the hidden two boats"
+  "Battleships! Enter two numbers between 1-8 that represent the co-ordinates (X & Y) to find the hidden two boats, press 'Q' to quit at any time, you'll have 20 chances to find the two boats."
 );
 
 // generate the two random positions the battleships will be placed at
@@ -33,6 +33,7 @@ const generateBoard = () => {
         JSON.stringify(firstRandomPosition) === JSON.stringify(xandyCombined) ||
         JSON.stringify(secondRandomPosition) === JSON.stringify(xandyCombined)
       ) {
+        //represents the two ships - can be changed to [x, y] to hide the two ships.
         arr.push("ship");
       } else {
         arr.push([x, y]);
@@ -57,10 +58,18 @@ const questions = () => {
   rl.question(
     "Enter your first number for the X Axis between 1-8 : ",
     (userX) => {
+      if (userX == "q") {
+        process.exit();
+      }
       rl.question(
         "Enter your second number for the Y Axis between 1-8 : ",
         (userY) => {
           rl.close();
+
+          if (userX || userY == "q") {
+            process.exit();
+          }
+
           let userXVal = Number(userX);
           let userYVal = Number(userY);
 
