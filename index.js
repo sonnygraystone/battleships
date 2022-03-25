@@ -43,10 +43,21 @@ const generateBoard = () => {
   return arr;
 };
 
-let questionCounter = 1;
-let hitCounter = 1;
-
 const genBoard = generateBoard();
+
+let questionCounter = 1;
+let firstHit = 0;
+let secondHit = 0;
+
+const addToFirstHitCount = () => {
+  firstHit++;
+  return firstHit;
+};
+
+const addToSecondHitCount = () => {
+  secondHit++;
+  return secondHit;
+};
 
 const questions = () => {
   const readline = require("readline");
@@ -58,9 +69,16 @@ const questions = () => {
   rl.question(
     "Enter your first number for the X Axis between 1-8 : ",
     (userX) => {
+      // quits out of game if user enters "Q"
       if (userX === "q") {
         process.exit();
       }
+      //quits out of game if user input is greater then 8
+      if (userX > 8) {
+        console.log("Try again selecting a number between 1-8");
+        process.exit();
+      }
+
       rl.question(
         "Enter your second number for the Y Axis between 1-8 : ",
         (userY) => {
@@ -70,11 +88,17 @@ const questions = () => {
             process.exit();
           }
 
+          if (userY > 8) {
+            console.log("Try again selecting a number between 1-8");
+            process.exit();
+          }
+
+          // saves users input values in an array then compare distances of each to determine if hot/warm/cold
+
           let userXVal = Number(userX);
           let userYVal = Number(userY);
 
           let userCombinedInputs = [userXVal, userYVal];
-          // saves users input values in an array then compare distances of each to determine if hot/warm/cold
 
           const firstShipDistance =
             Math.abs(userXVal - firstRandomPosition[0]) +
@@ -112,27 +136,48 @@ const questions = () => {
             );
             process.exit();
           }
-          if (hitCounter == 2) {
-            console.log("Congrats! You found both of the ships!");
-            process.exit();
-          }
+
           //compare user input to the first & second random boat positions
+          //first
           if (
             JSON.stringify(userCombinedInputs) ===
             JSON.stringify(firstRandomPosition)
           ) {
-            hitCounter++;
             questionCounter++;
-            console.log("Hit! Try find the second ship!");
-            questions();
+
+            if (firstHit == 1) {
+              console.log("Ship has already been found! Try again");
+              questionCounter++;
+              questions();
+            } else if (secondHit == 1) {
+              console.log("Congrats! You found both of the ships!");
+              process.exit();
+            } else {
+              console.log("Hit! Try find the second ship!");
+              addToFirstHitCount();
+              firstHit;
+              questions();
+            }
           } else if (
+            //second
             JSON.stringify(userCombinedInputs) ===
             JSON.stringify(secondRandomPosition)
           ) {
-            hitCounter++;
             questionCounter++;
-            console.log("Hit! Try find the other ship!");
-            questions();
+
+            if (secondHit == 1) {
+              console.log("Ship has already been found! Try again");
+              questionCounter++;
+              questions();
+            } else if (firstHit == 1) {
+              console.log("Congrats! You found both of the ships!");
+              process.exit();
+            } else {
+              console.log("Hit! Try find the other ship!");
+              addToSecondHitCount();
+              secondHit;
+              questions();
+            }
           } else {
             console.log(howHot);
             questionCounter++;
@@ -144,8 +189,5 @@ const questions = () => {
   );
 };
 
-const startGame = () => {
-  console.log("Game Board", genBoard);
-  questions();
-};
-startGame();
+console.log({ genBoard });
+questions();
