@@ -49,16 +49,6 @@ let questionCounter = 1;
 let firstHit = 0;
 let secondHit = 0;
 
-const addToFirstHitCount = () => {
-  firstHit++;
-  return firstHit;
-};
-
-const addToSecondHitCount = () => {
-  secondHit++;
-  return secondHit;
-};
-
 const questions = () => {
   const readline = require("readline");
   const rl = readline.createInterface({
@@ -154,8 +144,7 @@ const questions = () => {
               process.exit();
             } else {
               console.log("Hit! Try find the second ship!");
-              addToFirstHitCount();
-              firstHit;
+              firstHit++;
               questions();
             }
           } else if (
@@ -174,8 +163,7 @@ const questions = () => {
               process.exit();
             } else {
               console.log("Hit! Try find the other ship!");
-              addToSecondHitCount();
-              secondHit;
+              secondHit++;
               questions();
             }
           } else {
