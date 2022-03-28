@@ -3,47 +3,47 @@ console.log(
 );
 
 // generate the two random positions the battleships will be placed at
-const firstRandomBattleshipPosition = () => {
+const RandomBattleshipPosition = () => {
   const randomShipPositionX = Math.floor(Math.random() * 8);
   const randomShipPositionY = Math.floor(Math.random() * 8);
   const combinedValues = [randomShipPositionX + 1, randomShipPositionY + 1];
   return combinedValues;
 };
 
-const secondRandomBattleShipPosition = () => {
-  const secondrandomShipPositionX = Math.floor(Math.random() * 8);
-  const secondrandomShipPositionY = Math.floor(Math.random() * 8);
-  const combinedValues = [
-    secondrandomShipPositionX + 1,
-    secondrandomShipPositionY + 1,
-  ];
-  return combinedValues;
-};
+// const secondRandomBattleShipPosition = () => {
+//   const secondrandomShipPositionX = Math.floor(Math.random() * 8);
+//   const secondrandomShipPositionY = Math.floor(Math.random() * 8);
+//   const combinedValues = [
+//     secondrandomShipPositionX + 1,
+//     secondrandomShipPositionY + 1,
+//   ];
+//   return combinedValues;
+// };
 
-const firstRandomPosition = firstRandomBattleshipPosition();
-const secondRandomPosition = secondRandomBattleShipPosition();
+const firstRandomPosition = RandomBattleshipPosition();
+const secondRandomPosition = RandomBattleshipPosition();
 
-const generateBoard = () => {
-  // generates an 8x8 board - both ships are currently being displayed
-  let arr = [];
-  for (let x = 1; x < 9; x++) {
-    for (let y = 1; y < 9; y++) {
-      const xandyCombined = [x, y];
-      if (
-        JSON.stringify(firstRandomPosition) === JSON.stringify(xandyCombined) ||
-        JSON.stringify(secondRandomPosition) === JSON.stringify(xandyCombined)
-      ) {
-        //represents the two ships - can be changed to [x, y] to hide the two ships.
-        arr.push("ship");
-      } else {
-        arr.push([x, y]);
-      }
-    }
-  }
-  return arr;
-};
+// const generateBoard = () => {
+//   // generates an 8x8 board - both ships are currently being displayed
+//   let arr = [];
+//   for (let x = 1; x < 9; x++) {
+//     for (let y = 1; y < 9; y++) {
+//       const xandyCombined = [x, y];
+//       if (
+//         JSON.stringify(firstRandomPosition) === JSON.stringify(xandyCombined) ||
+//         JSON.stringify(secondRandomPosition) === JSON.stringify(xandyCombined)
+//       ) {
+//         //represents the two ships - can be changed to [x, y] to hide the two ships.
+//         arr.push("ship");
+//       } else {
+//         arr.push([x, y]);
+//       }
+//     }
+//   }
+//   return arr;
+// };
 
-const genBoard = generateBoard();
+// const genBoard = generateBoard();
 
 let questionCounter = 1;
 let firstHit = 0;
@@ -74,7 +74,7 @@ const questions = () => {
         (userY) => {
           rl.close();
 
-          if (userY === "q") {
+          if (userY.toLocaleLowerCase() === "q") {
             process.exit();
           }
 
@@ -134,10 +134,8 @@ const questions = () => {
             JSON.stringify(firstRandomPosition)
           ) {
             questionCounter++;
-
             if (firstHit == 1) {
               console.log("Ship has already been found! Try again");
-              questionCounter++;
               questions();
             } else if (secondHit == 1) {
               console.log("Congrats! You found both of the ships!");
@@ -156,7 +154,6 @@ const questions = () => {
 
             if (secondHit == 1) {
               console.log("Ship has already been found! Try again");
-              questionCounter++;
               questions();
             } else if (firstHit == 1) {
               console.log("Congrats! You found both of the ships!");
@@ -177,5 +174,4 @@ const questions = () => {
   );
 };
 
-console.log({ genBoard });
 questions();
