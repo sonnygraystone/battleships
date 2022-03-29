@@ -10,19 +10,10 @@ const RandomBattleshipPosition = () => {
   return combinedValues;
 };
 
-// const secondRandomBattleShipPosition = () => {
-//   const secondrandomShipPositionX = Math.floor(Math.random() * 8);
-//   const secondrandomShipPositionY = Math.floor(Math.random() * 8);
-//   const combinedValues = [
-//     secondrandomShipPositionX + 1,
-//     secondrandomShipPositionY + 1,
-//   ];
-//   return combinedValues;
-// };
-
 const firstRandomPosition = RandomBattleshipPosition();
 const secondRandomPosition = RandomBattleshipPosition();
 
+//creates a 8x8 board displayed to user as a visual represenation
 // const generateBoard = () => {
 //   // generates an 8x8 board - both ships are currently being displayed
 //   let arr = [];
@@ -42,7 +33,6 @@ const secondRandomPosition = RandomBattleshipPosition();
 //   }
 //   return arr;
 // };
-
 // const genBoard = generateBoard();
 
 let questionCounter = 1;
